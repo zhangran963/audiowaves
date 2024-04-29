@@ -1,46 +1,48 @@
 <template>
   <div>
-    <input
-      class="audioFile"
-      ref="fileInputRef"
-      type="file"
+    <FileInput
       accept="audio/mp3"
+      @file-input-mounted="fileInputMounted"
       @change="handleFileChange"
-    />
-    <!-- <FileInput @change="handleFileChange" :fileInputRef="fileInputRef" accept="audio/mp3">{{ fileInputRef?.value || 'Select an audio file' }}</FileInput> -->
+      >{{ fileInputName || '请选择音频文件' }}</FileInput
+    >
     <canvas id="canvas" ref="canvasRef"></canvas>
   </div>
 </template>
 
 <script lang="ts">
-import { ref, watchEffect } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import FileInput from '@/components/FileInput.vue'
 
 export default {
   name: 'AudioView',
-    components: {
-        FileInput
-    },
+  components: {
+    FileInput
+  },
   setup() {
     const fileInputRef = ref<HTMLInputElement>()
+    const fileInputName = computed(() => fileInputRef.value?.files?.[0]?.name || '')
     const canvasRef = ref<HTMLCanvasElement>()
     const audioContextRef = ref<AudioContext>(new AudioContext())
     const analyserRef = ref<AnalyserNode>()
 
+    const fileInputMounted = (val: HTMLInputElement) => {
+      fileInputRef.value = val
+    }
+
     watchEffect(() => {
       if (!audioContextRef.value) {
-        console.log('* watchEffect[skip]')
+        // console.log('* watchEffect[skip]')
         return
       }
       analyserRef.value = audioContextRef.value?.createAnalyser()
-      analyserRef.value.fftSize = 2048
+      analyserRef.value.fftSize = 8192
       console.log('* watchEffect[analyserRef]', analyserRef.value)
     })
 
-    const handleFileChange = (event: Event) => {
+    const handleFileChange = () => {
       const files = fileInputRef.value?.files
       if (!files || files.length === 0) {
-        console.log('* handleFileChange[skip]')
         return
       }
       const file = files[0]
@@ -48,7 +50,7 @@ export default {
         console.log('* handleFileChange[files]', file)
         const reader = new FileReader()
         reader.onload = (fileEvent) => {
-          console.log('* reader.onload', fileEvent.target?.result)
+          // console.log('* reader.onload', fileEvent.target?.result)
           audioContextRef.value?.decodeAudioData(
             fileEvent.target?.result as ArrayBuffer,
             (buffer) => {
@@ -77,8 +79,8 @@ export default {
       canvas.width = window.innerWidth
       canvas.height = 400
 
-      const freqLabels = 1000 // Max frequency to display
-      const labelInterval = 40 // Interval for labels
+      const freqLabels = 3000 // Max frequency to display
+      const labelInterval = 100 // Interval for labels
       const barWidth = canvas.width / (freqLabels / labelInterval)
       const radius = 5 // Radius for rounded corners
 
@@ -133,8 +135,10 @@ export default {
     }
     return {
       fileInputRef,
+      fileInputName,
       canvasRef,
-      handleFileChange
+      handleFileChange,
+      fileInputMounted
     }
   }
 }
