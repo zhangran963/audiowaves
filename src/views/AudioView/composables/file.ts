@@ -1,4 +1,4 @@
-import { ref, computed, watch, watchEffect } from 'vue'
+import { ref, computed } from 'vue'
 
 export const useFileInput = () => {
   const fileInputRef = ref<HTMLInputElement>()
@@ -11,7 +11,7 @@ export const useFileInput = () => {
     const files = fileInputRef.value?.files
     if (!files?.length) return
     file.value = files[0]
-    console.log('* file', file.value, fileInputName.value)
+    // console.log('* file', file.value, fileInputName.value)
   }
 
   return {
