@@ -46,8 +46,13 @@ export default {
   }
   .file-button {
     display: inline-block;
-    background-color: #007bff;
-    color: white;
+    background-color: var(--primary);
+    box-shadow:
+      inset 0.2rem 0.2rem 1rem var(--primary-light),
+      inset -0.2rem -0.2rem 1rem var(--primary-dark),
+      0.3rem 0.3rem 0.6rem var(--greyLight-2),
+      -0.2rem -0.2rem 0.5rem var(--white);
+    color: var(--greyLight-1);
     border: none;
     border-radius: 4px;
     padding: 10px 15px;

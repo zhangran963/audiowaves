@@ -141,6 +141,9 @@ export default {
   border-radius: 5px;
   height: 10px;
   margin: 10px;
+  box-shadow:
+    inset 0.2rem 0.2rem 0.5rem var(--greyLight-2),
+    inset -0.2rem -0.2rem 0.5rem var(--white);
   position: relative;
 
   &.is-seekable {
@@ -149,7 +152,12 @@ export default {
 }
 
 .progress {
-  background: #3b82f6;
+  background: linear-gradient(
+    -1deg,
+    var(--primary-dark) 0%,
+    var(--primary) 50%,
+    var(--primary-light) 100%
+  );
   border-radius: 5px;
   height: 100%;
   transition: width 0.2s linear;
@@ -163,8 +171,23 @@ export default {
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    border: 1px solid lightcoral;
-    background-color: lightcoral;
+    background-color: var(--white);
+    box-shadow: 0px 0.1rem 0.3rem 0px var(--greyLight-3);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &::after {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      box-shadow:
+        inset 0.2rem 0.2rem 0.5rem var(--greyLight-2),
+        inset -0.2rem -0.2rem 0.5rem var(--white);
+    }
 
     &.is-dragable {
       cursor: pointer;

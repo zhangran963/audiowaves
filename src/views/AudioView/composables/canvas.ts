@@ -1,4 +1,4 @@
-import { computed, inject, ref, watch, nextTick, type Ref } from 'vue'
+import { computed, ref, watch, nextTick } from 'vue'
 
 export const useCanvas = () => {
   const canvasRef = ref<HTMLCanvasElement>()
@@ -9,11 +9,10 @@ export const useCanvas = () => {
     if (!canvasEle) return
     await nextTick()
 
-    const audioViewElement = document.querySelector('.audio-view')
-    console.log('* audioViewElement', audioViewElement)
-    // console.log('* audioWidth.in  ', audioWidth?.value)
-    canvasEle.width = audioViewElement!.clientWidth
-    canvasEle.height = 400
+    const audioViewElement = document.querySelector('.audio-view-content')
+    const clientWidth = audioViewElement!.clientWidth
+    canvasEle.width = clientWidth
+    canvasEle.height = clientWidth * 0.5
   })
 
   const clearCanvas = () => {

@@ -1,0 +1,29 @@
+/* .physical-block-outer {
+  box-shadow:
+    0.3rem 0.3rem 0.6rem var(--greyLight-2),
+    -0.2rem -0.2rem 0.5rem var(--white);
+  border-radius: 1rem;
+}
+.physical-block-inner {
+  box-shadow:
+    inset 0.2rem 0.2rem 0.5rem var(--greyLight-2),
+    inset -0.2rem -0.2rem 0.5rem var(--white);
+  border-radius: 1rem;
+} */
+
+.physical-outer {
+  box-shadow:
+    0.3rem 0.3rem 0.6rem var(--greyLight-2),
+    -0.2rem -0.2rem 0.5rem var(--white);
+}
+.physical-inner {
+  box-shadow:
+    inset 0.2rem 0.2rem 0.5rem var(--greyLight-2),
+    inset -0.2rem -0.2rem 0.5rem var(--white);
+}
+
+/* .physical-circle-outer {
+  box-shadow:
+    0.3rem 0.3rem 0.6rem var(--greyLight-2),
+    -0.2rem -0.2rem 0.5rem var(--white);
+} */

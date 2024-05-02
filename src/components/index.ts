@@ -1,4 +1,6 @@
-export { default as IconPlay } from './icons/IconPlay.vue'
-export { default as IconPause } from './icons/IconPause.vue'
+export { default as IconPlay } from './icons/play.vue'
+export { default as IconPause } from './icons/pause.vue'
 export { default as FileInput } from './FileInput.vue'
 export { default as ProgressBar } from './progressBar/index.vue'
+export { default as MyButton } from './button/index.vue'
+export { default as CircleWave } from './circleWave.vue'
