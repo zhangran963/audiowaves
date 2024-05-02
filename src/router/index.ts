@@ -5,11 +5,6 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      redirect: { name: 'audio' }
-    },
-    {
-      path: '/audio',
       name: 'audio',
       component: () => import('@/views/AudioView/index.vue')
     }
