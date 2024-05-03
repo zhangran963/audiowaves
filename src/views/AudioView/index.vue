@@ -9,6 +9,11 @@
           @change="fileChangeHandle"
           >{{ fileInputName || '请选择音频文件' }}</FileInput
         >
+        <div class="voice-line">
+          <MyButton @click="decreaseVoice">-</MyButton>
+          <span class="voice-line-val">{{ audio.voice.toFixed(1) }}</span>
+          <MyButton @click="increaseVoice">+</MyButton>
+        </div>
         <!-- 播放控制按钮 -->
         <div class="play-line">
           <div class="play-line-controls">
@@ -38,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import { IconPlay, IconPause, FileInput, ProgressBar, CircleWave } from '@/components'
+import { IconPlay, IconPause, FileInput, ProgressBar, CircleWave, MyButton } from '@/components'
 import { useData } from './composables'
 
 export default {
@@ -48,7 +53,8 @@ export default {
     ProgressBar,
     IconPlay,
     IconPause,
-    CircleWave
+    CircleWave,
+    MyButton
   },
   setup() {
     return {
@@ -65,6 +71,13 @@ export default {
 
   &-wrapper {
     padding: 20px;
+  }
+
+  .voice-line {
+    padding: 20px 0 0;
+    &-val {
+      padding: 0 10px;
+    }
   }
 
   .play-line {

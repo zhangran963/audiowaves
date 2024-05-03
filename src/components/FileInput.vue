@@ -34,6 +34,7 @@ export default {
 
 <style lang="scss">
 .file-input-wrapper {
+  display: inline-block;
   .file-input {
     display: none;
   }

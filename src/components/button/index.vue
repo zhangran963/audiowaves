@@ -31,6 +31,7 @@ export default defineComponent({
   justify-content: center;
   cursor: pointer;
   transition: 0.3s ease;
+  user-select: none;
 }
 
 .my-btn__primary {

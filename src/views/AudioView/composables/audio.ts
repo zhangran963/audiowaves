@@ -78,6 +78,9 @@ export const useAudio = () => {
     playing.value = true
   }
 
+  const decreaseVoice = () => audio.decreaseVoice()
+  const increaseVoice = () => audio.increaseVoice()
+
   return {
     ...fileInfo,
     ...canvasInfo,
@@ -86,10 +89,13 @@ export const useAudio = () => {
     pauseAnalyser,
     stopAnalyser,
     onProgressStopDrag,
+    decreaseVoice,
+    increaseVoice,
     playing,
     currentTime,
     duration,
-    analyserIsReady
+    analyserIsReady,
+    audio
   }
 }
 
@@ -152,8 +158,8 @@ class MyAudio {
     this.context = new AudioContext()
     this.analyser = this.context.createAnalyser()
     this.gainNode = this.context.createGain()
-
     this.analyser.fftSize = fftSize
+    this.reset()
   }
 
   async decodeAudioData(result: ArrayBuffer) {
@@ -210,6 +216,7 @@ class MyAudio {
   reset() {
     this.startTime = 0
     this.pausedTime = 0
+    this.voice = 0.5
   }
 
   get isPause() {
@@ -224,5 +231,21 @@ class MyAudio {
   }
   get duration() {
     return round(this.audioBuffer.duration, 0)
+  }
+  get voice() {
+    return this.gainNode.gain.value
+  }
+  set voice(val) {
+    if (val > 0 && val <= 1) {
+      this.gainNode.gain.value = val
+    }
+  }
+
+  increaseVoice() {
+    this.voice += 0.1
+  }
+
+  decreaseVoice() {
+    this.voice -= 0.1
   }
 }
