@@ -12,7 +12,7 @@ export const useCanvas = () => {
     const audioViewElement = document.querySelector('.audio-view-content')
     const clientWidth = audioViewElement!.clientWidth
     canvasEle.width = clientWidth
-    canvasEle.height = clientWidth * 0.5
+    canvasEle.height = clientWidth * 0.6
   })
 
   const clearCanvas = () => {
@@ -46,13 +46,14 @@ export const useCanvas = () => {
     clearCanvas()
     let barHeight
     let x = 0
+    const heightFactor = canvasRef.value!.height / 255 // Unit8Arrya范围 0~255; 计算比例因子
 
     for (let i = 0; i <= maxFrequency; i += frequencyInterval) {
-      barHeight = frequencyData[i]
+      barHeight = frequencyData[i] * heightFactor * 0.88
       fillStyle('#000')
       drawRectWithRadius(x, canvasRef.value!.height - barHeight, barWidth - 2, barHeight)
 
-      if ((i / frequencyInterval) % 2 == 0) {
+      if ((i / frequencyInterval) % 4 == 0) {
         ctxRef.value!.fillText(`${i} Hz`, x + barWidth / 4, 20) // Position and content of the text
       }
 
