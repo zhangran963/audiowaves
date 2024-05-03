@@ -31,7 +31,7 @@
             </div>
           </div>
         </div>
-        <canvas id="canvas" ref="canvasRef" class="audio-view-canvas"></canvas>
+        <canvas id="canvas" ref="canvasRef" class="audio-view-canvas physical-inner"></canvas>
       </div>
     </div>
   </div>
@@ -98,7 +98,8 @@ export default {
   }
 
   &-canvas {
-    border-radius: 8px;
+    margin-top: 10px;
+    border-radius: 4px;
   }
 }
 

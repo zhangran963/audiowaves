@@ -1,33 +1,57 @@
-import { computed, ref, watch, nextTick } from 'vue'
+import { round } from 'lodash'
+import { computed, ref, watch } from 'vue'
 
 export const useCanvas = () => {
   const canvasRef = ref<HTMLCanvasElement>()
   const ctxRef = computed(() => canvasRef.value?.getContext('2d'))
+  // Unit8Arrya范围 0~255; 计算比例因子
+  const heightFactor = computed(() =>
+    canvasRef.value ? round(canvasRef.value?.height / 255, 2) : 0
+  )
+  const barWidth = computed(() =>
+    canvasRef.value
+      ? round((canvasRef.value.width - edge * 2) / (maxFrequency / frequencyInterval), 2)
+      : 0
+  )
 
   watch(canvasRef, async () => {
-    const canvasEle = canvasRef.value
-    if (!canvasEle) return
-    await nextTick()
-
-    const audioViewElement = document.querySelector('.audio-view-content')
-    const clientWidth = audioViewElement!.clientWidth
-    canvasEle.width = clientWidth
-    canvasEle.height = clientWidth * 0.6
+    const canvasEle = canvasRef.value!
+    const audioViewElement = document.querySelector('.audio-view-content')!
+    canvasEle.width = audioViewElement.clientWidth
+    canvasEle.height = audioViewElement.clientWidth * 0.6
   })
 
-  const clearCanvas = () => {
+  const maxFrequency = 3000
+  const frequencyInterval = 100
+  const edge = 10
+  const draw = (frequencyData: Uint8Array) => {
     const canvasEle = canvasRef.value!
-    ctxRef.value?.clearRect(0, 0, canvasEle.width, canvasEle.height)
-  }
+    const ctx = ctxRef.value
+    if (!ctx || !canvasEle) return
+    ctx.clearRect(0, 0, canvasEle.width, canvasEle.height)
 
-  const fillStyle = (style: string) => {
-    ctxRef.value!.fillStyle = style
+    setupColors()
+    // 柱形图的宽
+    let x = edge
+    for (let i = 0; i <= maxFrequency; i += frequencyInterval) {
+      // 柱形图的高
+      const barHeight = frequencyData[i] * heightFactor.value * 0.9
+
+      // 音调高 -> barHeight高 -> (canvasEle.height - barHeight)低 -> 从下面看, 高
+      drawRectWithRadius(x, canvasEle.height - barHeight, barWidth.value - 2, barHeight)
+      // 文本
+      if ((i / frequencyInterval) % 2 == 0) {
+        ctx.fillText(`${i + frequencyInterval}Hz`, x, 20)
+      }
+
+      // 起始值
+      x += barWidth.value
+    }
   }
 
   const drawRectWithRadius = (x: number, y: number, width: number, height: number) => {
-    const ctx = ctxRef.value
-    if (!ctx) return
-
+    if (!height) return
+    const ctx = ctxRef.value!
     ctx.beginPath()
     ctx.moveTo(x, y)
     ctx.lineTo(x + width, y)
@@ -38,35 +62,17 @@ export const useCanvas = () => {
     ctx.fill()
   }
 
-  const maxFrequency = 3000
-  // const minFrequency = 20
-  const frequencyInterval = 100
-  const draw = (frequencyData: Uint8Array) => {
-    const barWidth = canvasRef.value!.width / (maxFrequency / frequencyInterval)
-    clearCanvas()
-    let barHeight
-    let x = 0
-    const heightFactor = canvasRef.value!.height / 255 // Unit8Arrya范围 0~255; 计算比例因子
-
-    for (let i = 0; i <= maxFrequency; i += frequencyInterval) {
-      barHeight = frequencyData[i] * heightFactor * 0.88
-      fillStyle('#000')
-      drawRectWithRadius(x, canvasRef.value!.height - barHeight, barWidth - 2, barHeight)
-
-      if ((i / frequencyInterval) % 4 == 0) {
-        ctxRef.value!.fillText(`${i} Hz`, x + barWidth / 4, 20) // Position and content of the text
-      }
-
-      x += barWidth + 1
-    }
+  const setupColors = () => {
+    const ctx = ctxRef.value!
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvasRef.value!.height)
+    gradient.addColorStop(0, '#5b0eeb')
+    gradient.addColorStop(1, '#8abdff')
+    ctx.fillStyle = gradient
   }
 
   return {
     canvasRef,
     ctxRef,
-    clearCanvas,
-    fillStyle,
-    drawRectWithRadius,
     draw
   }
 }
