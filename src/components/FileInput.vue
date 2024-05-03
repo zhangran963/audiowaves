@@ -1,14 +1,7 @@
 <template>
   <div class="file-input-wrapper">
-    <input
-      id="file-input"
-      ref="fileInputRef"
-      class="file-input"
-      type="file"
-      accept="audio/mp3"
-      v-bind="$attrs"
-    />
-    <label className="file-button" for="file-input">
+    <input id="file-input" ref="fileInputRef" class="file-input" type="file" v-bind="$attrs" />
+    <label class="file-button" for="file-input">
       <slot />
     </label>
   </div>

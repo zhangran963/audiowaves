@@ -95,4 +95,7 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* 移动端触摸 的蓝色框 */
+  -webkit-tap-highlight-color: transparent;
 }

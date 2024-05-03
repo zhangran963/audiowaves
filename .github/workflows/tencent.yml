@@ -1,0 +1,57 @@
+name: Deploy to Tencent Cloud
+run-name: Deploy to Tencent Cloud by ${{ github.actor }}
+
+on:
+  push:
+    branches:
+      - main # 当推送到 main 分支时触发
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3 # docs https://pnpm.io/continuous-integration#github-actions
+        with:
+          version: 8 # Optional: specify a pnpm version
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Build Project
+        run: pnpm run build
+
+      - name: Setup SSH known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.TENCENT_SERVER_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Set up SSH key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.TENCENT_SERVER_PRIVATE_KEY }}
+
+      - name: Rsync files
+        run: rsync -avz --delete --exclude '.git*' --exclude 'node_modules/' ./dist/* ${{ secrets.TENCENT_SERVER_USERNAME }}@${{ secrets.TENCENT_SERVER_HOST }}:/home/ubuntu/audiowaves/
+
+    #   - name: Execute remote commands
+    #     run: ssh ${{ secrets.TENCENT_SERVER_USERNAME }}@${{ secrets.TENCENT_SERVER_HOST }} 'cd /path/to/your/web/directory && some-command'
+    #     # 如果需要，可以在这里执行远程命令，如重启服务器或启动服务等
+
+    #   # Deploy
+    #   - name: Deploy
+    #     uses: easingthemes/ssh-deploy@v2.0.7
+    #     env:
+    #       SSH_PRIVATE_KEY: ${{ secrets.TENCENT_SERVER_PRIVATE_KEY }}
+    #       ARGS: '-avz --delete'
+    #       SOURCE: 'dist/'
+    #       REMOTE_HOST: ${{ secrets.TENCENT_SERVER_HOST }}
+    #       REMOTE_USER: ${{ secrets.TENCENT_SERVER_USERNAME }}
+    #       TARGET: '/root/www/audiowaves/'

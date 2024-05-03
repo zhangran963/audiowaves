@@ -1,5 +1,5 @@
-name: Deploy to Cloud Service
-run-name: ${{ github.actor }} is try run actions
+name: Deploy to GitHub Pages
+run-name: Deploy to GitHub Pages by ${{ github.actor }}
 
 on:
   push:

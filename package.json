@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "homepage": "https://zhangran963.github.io/soundwaves/",
+  "homepage": "https://zhangran963.github.io/audiowaves/",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",

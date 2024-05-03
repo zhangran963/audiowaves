@@ -4,7 +4,7 @@
       <div class="audio-view-content">
         <FileInput
           class="audio-view-fileinput"
-          accept="audio/mp3"
+          accept="audio/*"
           @file-input-mounted="fileInputMounted"
           @change="fileChangeHandle"
           >{{ fileInputName || '请选择音频文件' }}</FileInput
