@@ -1,15 +1,15 @@
 <template>
   <div class="circle">
-    <span class="circle__btn" :class="{ shadow: !isAnimate }">
+    <span class="circle__btn" :class="{ shadow: isAnimate }">
       <slot />
     </span>
     <span class="circle__back-1" :class="{ paused: !isAnimate }"></span>
-    <span class="circle__back-2" :class="{ paused: !isAnimate }"></span>
+    <span v-show="showCircle2" class="circle__back-2" :class="{ paused: !isAnimate }"></span>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref, toRefs, watch } from 'vue'
 
 export default defineComponent({
   name: 'CircleWave',
@@ -18,19 +18,40 @@ export default defineComponent({
       type: Boolean,
       default: false
     }
+  },
+  setup(props) {
+    const { isAnimate } = toRefs(props)
+    const showCircle2 = ref(false)
+    watch(
+      isAnimate,
+      (val) => {
+        if (val) {
+          // 圈2 较 圈1 延后
+          setTimeout(() => {
+            showCircle2.value = true
+          }, 2000)
+        }
+      },
+      {
+        once: true // 仅初始时, 隐藏"圈2"
+      }
+    )
+
+    return {
+      showCircle2
+    }
   }
 })
 </script>
 
 <style lang="scss">
-$shadow:
+$outer-shadow:
   0.3rem 0.3rem 0.6rem var(--greyLight-2),
   -0.2rem -0.2rem 0.5rem var(--white);
 $inner-shadow:
   inset 0.2rem 0.2rem 0.5rem var(--greyLight-2),
   inset -0.2rem -0.2rem 0.5rem var(--white);
 
-/*  PLAY BUTTON  */
 .circle {
   grid-column: 2 / 3;
   grid-row: 4 / 6;
@@ -54,7 +75,7 @@ $inner-shadow:
     color: var(--primary);
     z-index: 300;
     background: var(--greyLight-1);
-    box-shadow: $shadow;
+    box-shadow: $outer-shadow;
     cursor: pointer;
     position: relative;
     &.shadow {
@@ -82,30 +103,19 @@ $inner-shadow:
   &__back-2 {
     grid-row: 1 / 2;
     grid-column: 1 / 2;
-    width: 60px;
-    height: 60px;
+    width: 55px;
+    height: 55px;
     border-radius: 50%;
     filter: blur(1px);
     z-index: 100;
   }
 
-  &__back-1 {
-    box-shadow:
-      0.4rem 0.4rem 0.8rem var(--greyLight-2),
-      -0.4rem -0.4rem 0.8rem var(--white);
-    background: linear-gradient(to bottom right, var(--greyLight-2) 0%, var(--white) 100%);
-    animation: waves 4s linear infinite;
-
-    &.paused {
-      animation-play-state: paused;
-    }
-  }
-
+  &__back-1,
   &__back-2 {
     box-shadow:
       0.4rem 0.4rem 0.8rem var(--greyLight-2),
       -0.4rem -0.4rem 0.8rem var(--white);
-    animation: waves 4s linear 2s infinite;
+    animation: waves 4s linear infinite;
 
     &.paused {
       animation-play-state: paused;
@@ -115,11 +125,16 @@ $inner-shadow:
 
 @keyframes waves {
   0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+
+  33% {
     transform: scale(1);
     opacity: 1;
   }
 
-  50% {
+  67% {
     opacity: 1;
   }
 
