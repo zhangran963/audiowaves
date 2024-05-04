@@ -11,7 +11,7 @@
         >
         <div class="voice-line">
           <MyButton @click="decreaseVoice">-</MyButton>
-          <span class="voice-line-val">{{ audio.voice.toFixed(1) }}</span>
+          <span class="voice-line-val">{{ audio.voice }}</span>
           <MyButton @click="increaseVoice">+</MyButton>
         </div>
         <!-- 播放控制按钮 -->
@@ -25,10 +25,10 @@
           <div class="progress-line">
             <div class="progress-line-start">{{ currentTimeStr }}</div>
             <ProgressBar
-              v-model="currentTime"
+              v-model="audio.currentTime"
               class="progress-line-box"
-              :dragable="analyserIsReady && currentTime > 0"
-              :max="duration"
+              :dragable="analyserIsReady && audio.currentTime > 0"
+              :max="audio.duration"
               @stop-drag="onProgressStopDrag"
             />
             <div class="progress-line-end">
@@ -76,7 +76,9 @@ export default {
   .voice-line {
     padding: 20px 0 0;
     &-val {
-      padding: 0 10px;
+      display: inline-block;
+      text-align: center;
+      width: 50px;
     }
   }
 

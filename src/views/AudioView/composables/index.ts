@@ -4,11 +4,11 @@ import { dayjs } from '@/utils/time'
 
 export const useData = () => {
   const audioInfos = useAudio()
-  const { analyserIsReady, currentTime, duration } = audioInfos
+  const { analyserIsReady, audio } = audioInfos
 
   const currentTimeStr = computed(() => {
     if (analyserIsReady.value) {
-      return dayjs.duration(currentTime.value, 'seconds').format('mm:ss')
+      return dayjs.duration(audio.value.currentTime, 'seconds').format('mm:ss')
     } else {
       return '--:--'
     }
@@ -16,14 +16,13 @@ export const useData = () => {
 
   const endTimeStr = computed(() => {
     if (analyserIsReady.value) {
-      return dayjs.duration(duration.value, 'seconds').format('mm:ss')
+      return dayjs.duration(audio.value.duration, 'seconds').format('mm:ss')
     } else {
       return '--:--'
     }
   })
 
   const play = () => {
-    // audioInfos.playAudio()
     audioInfos.startAnalyser()
   }
 
